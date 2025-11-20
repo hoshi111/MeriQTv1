@@ -1,17 +1,19 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain, screen } = require('electron');
+const { autoUpdater } = require("electron-updater");
 const path = require('path');
 const os = require('os');
 const YTMusic = require('ytmusic-api');
 const ytdlp = require('youtube-dl-exec');
 const { spawn } = require('child_process');
 
-const ytDlpPath = path.join(__dirname, 'yt-dlp');
-// let ytDlpPath;
-// if (os.platform() === 'win32') {
-//   ytDlpPath = path.join(process.resourcesPath, 'yt-dlp.exe');
-// } else {
-//   ytDlpPath = path.join(process.resourcesPath, 'yt-dlp');
-// }
+// const ytDlpPath = path.join(__dirname, 'yt-dlp');
+let ytDlpPath;
+if (os.platform() === 'win32') {
+  ytDlpPath = path.join(process.resourcesPath, 'yt-dlp.exe');
+  autoUpdater.checkForUpdatesAndNotify();
+} else {
+  ytDlpPath = path.join(process.resourcesPath, 'yt-dlp');
+}
 
 //HOT RELOAD!!!!!!!
 
@@ -84,6 +86,40 @@ app.whenReady().then(() => {
 
   // Close popup when clicking outside
   popupWindow.on('blur', () => popupWindow.hide());
+});
+
+// ----- AutoUpdater Events ----- //
+autoUpdater.on("checking-for-update", () => {
+  console.log("Checking for update...");
+});
+
+autoUpdater.on("update-available", info => {
+  console.log("Update available:", info);
+});
+
+autoUpdater.on("update-not-available", () => {
+  console.log("No update available.");
+});
+
+autoUpdater.on("error", err => {
+  console.error("Update error:", err);
+});
+
+autoUpdater.on("download-progress", percent => {
+  console.log("Downloading update:", percent.percent + "%");
+});
+
+autoUpdater.on("update-downloaded", () => {
+  const response = dialog.showMessageBoxSync({
+    type: "question",
+    buttons: ["Restart now", "Later"],
+    defaultId: 0,
+    message: "Update downloaded. Restart now?"
+  });
+
+  if (response === 0) {
+    autoUpdater.quitAndInstall();
+  }
 });
 
 async function getAudioStream(videoId) {

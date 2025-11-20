@@ -12,7 +12,7 @@ const titleEl = document.getElementById('title');
 
 let isPlaying = false;
 let lastPlayedLi = null;
-let songList = [];       // all <li> including top + suggested
+let songList = [];
 let currentIndex = 0;
 
 // Play a song
