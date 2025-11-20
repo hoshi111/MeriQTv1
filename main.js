@@ -3,7 +3,6 @@ const { autoUpdater } = require("electron-updater");
 const path = require('path');
 const os = require('os');
 const YTMusic = require('ytmusic-api');
-const ytdlp = require('youtube-dl-exec');
 const { spawn } = require('child_process');
 
 // const ytDlpPath = path.join(__dirname, 'yt-dlp');

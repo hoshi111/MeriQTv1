@@ -16,16 +16,11 @@
     "dist:win": "electron-builder --win"
   },
   "dependencies": {
-    "@distube/yt-dlp": "^2.0.1",
-    "play-dl": "^1.9.7",
-    "youtube-dl-exec": "^3.0.26",
-    "yt-dlp-exec": "^1.0.2",
-    "ytdl-core": "^4.11.5",
     "ytmusic-api": "^5.3.0"
   },
   "devDependencies": {
     "chokidar": "^4.0.3",
-    "electron": "^26.6.10",
+    "electron": "26.6.10",
     "electron-builder": "^26.0.12",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-updater": "^6.6.2",
@@ -50,7 +45,7 @@
           "to": "yt-dlp.exe"
         }
       ],
-      "icon": "assets/icon.ico"
+      "icon": "icons/icon.ico"
     },
     "linux": {
       "target": [
@@ -62,7 +57,7 @@
           "to": "yt-dlp"
         }
       ],
-      "icon": "assets/icon.png"
+      "icon": "icons/icon.png"
     },
     "publish": [
       {
