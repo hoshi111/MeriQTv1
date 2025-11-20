@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>MeriQT</title>
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2>MeriQT</h2>
+            <input id="query" placeholder="Search music..." />
+            <button id="search">Search</button>
+            <div class="songList">
+                <ul id="results"></ul>
+            </div>
+            
+            
+        </div>
+
+        <div class="controls">
+            <audio id="player"></audio>
+            <p id="title" class="title">MeriQT</p>
+            <input type="range" id="trackbar" min="0" max="100" value="0">
+             <img id="playpause" class="playpause" src="icons/play.png" alt="playpause">
+             <img id="back" class="back" src="icons/back.png" alt="back">
+             <img id="next" class="next" src="icons/next.png" alt="next">
+        </div>
+        <script src="./renderer.js"></script>
+    </body>
+</html>

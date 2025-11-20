@@ -1,0 +1,75 @@
+{
+  "name": "MeriQT",
+  "version": "1.0.0",
+  "description": "System Tray Music Player",
+  "homepage": "https://github.com/hoshi111/MeriQTv1",
+  "author": {
+    "name": "Jason Villanueva",
+    "email": "villanueva.jason2106@gmail.com"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "scss": "sass style.scss style.css",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux",
+    "dist:win": "electron-builder --win"
+  },
+  "dependencies": {
+    "@distube/yt-dlp": "^2.0.1",
+    "play-dl": "^1.9.7",
+    "youtube-dl-exec": "^3.0.26",
+    "yt-dlp-exec": "^1.0.2",
+    "ytdl-core": "^4.11.5",
+    "ytmusic-api": "^5.3.0"
+  },
+  "devDependencies": {
+    "chokidar": "^4.0.3",
+    "electron": "^26.6.10",
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-updater": "^6.6.2",
+    "sass": "^1.94.1"
+  },
+  "build": {
+    "appId": "com.meri.qt",
+    "productName": "MeriQT",
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "nsis",
+      "extraResources": [
+        {
+          "from": "yt-dlp.exe",
+          "to": "yt-dlp.exe"
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "extraResources": [
+        {
+          "from": "yt-dlp",
+          "to": "yt-dlp"
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "hoshi111",
+        "repo": "MeriQTv1"
+      }
+    ]
+  }
+}
