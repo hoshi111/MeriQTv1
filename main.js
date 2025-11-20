@@ -9,7 +9,6 @@ const { spawn } = require('child_process');
 let ytDlpPath;
 if (os.platform() === 'win32') {
   ytDlpPath = path.join(process.resourcesPath, 'yt-dlp.exe');
-  autoUpdater.checkForUpdatesAndNotify();
 } else {
   ytDlpPath = path.join(process.resourcesPath, 'yt-dlp');
 }
@@ -86,6 +85,12 @@ app.whenReady().then(() => {
   // Close popup when clicking outside
   popupWindow.on('blur', () => popupWindow.hide());
 });
+
+app.on('ready', () => {
+  if (os.platform() === 'win32') {
+    autoUpdater.checkForUpdatesAndNotify();
+  }
+})
 
 // ----- AutoUpdater Events ----- //
 autoUpdater.on("checking-for-update", () => {
