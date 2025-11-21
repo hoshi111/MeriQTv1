@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain, screen } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, screen, dialog } = require('electron');
 const { autoUpdater } = require("electron-updater");
 const path = require('path');
 const os = require('os');
@@ -25,6 +25,7 @@ if (os.platform() === 'win32') {
 
 let tray;
 let popupWindow;
+let isVisible = false;
 const yt = new YTMusic();
 
 (async () => {
@@ -56,24 +57,28 @@ app.whenReady().then(() => {
     alwaysOnTop: true,
     skipTaskbar: true,
     focusable: true,
+    movable: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     }
   });
+  isVisible = true;
   popupWindow.loadFile(path.join(__dirname, 'index.html'));
 
   //DEVTOOL!!!!!!!
   // popupWindow.webContents.openDevTools({ mode: 'detach' });
   
   tray.on('click', () => {
-    if (popupWindow.isVisible()) {
+    console.log(isVisible)
+    if (isVisible) {
       popupWindow.hide();
     } else {
+      isVisible = true;
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
       popupWindow.setBounds({
         x: Math.round(width / 2 - 200),
-        y: Math.round(height / 2 - 255),
+        y: Math.round(height / 2 - 285),
         width: 400,
         height: 570
       });
@@ -83,35 +88,71 @@ app.whenReady().then(() => {
   });
 
   // Close popup when clicking outside
-  popupWindow.on('blur', () => popupWindow.hide());
+  popupWindow.on('blur', () => {
+    isVisible = false;
+    popupWindow.hide()
+    console.log(isVisible)
+  });
+
+  setTimeout(() => {
+      console.log("🔍 Checking for updates...");
+      autoUpdater.checkForUpdatesAndNotify();
+    }, 2000);
+
+  // if (os.platform() === "win32") {
+  //   setTimeout(() => {
+  //     console.log("🔍 Checking for updates...");
+  //     autoUpdater.checkForUpdatesAndNotify();
+  //   }, 2000);
+  // }
 });
 
-app.on('ready', () => {
-  if (os.platform() === 'win32') {
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-})
+// app.on('ready', () => {
+//   if (os.platform() === 'win32') {
+//     autoUpdater.checkForUpdatesAndNotify();
+//   }
+// })
 
 // ----- AutoUpdater Events ----- //
 autoUpdater.on("checking-for-update", () => {
   console.log("Checking for update...");
 });
 
-autoUpdater.on("update-available", info => {
+autoUpdater.on("update-available", (info) => {
   console.log("Update available:", info);
+  dialog.showMessageBox({
+    type: "info",
+    title: "Update Available",
+    message: `A new version (${info.version}) is available.\nIt will download automatically.`,
+  });
 });
 
 autoUpdater.on("update-not-available", () => {
   console.log("No update available.");
 });
 
-autoUpdater.on("error", err => {
+autoUpdater.on("error", (err) => {
   console.error("Update error:", err);
+  dialog.showErrorBox("Update Error", err == null ? "unknown" : (err.stack || err).toString());
 });
 
-autoUpdater.on("download-progress", percent => {
-  console.log("Downloading update:", percent.percent + "%");
+autoUpdater.on("download-progress", (progress) => {
+  console.log(`Downloading update: ${progress.percent}%`);
 });
+
+autoUpdater.on("update-downloaded", () => {
+  const response = dialog.showMessageBoxSync({
+    type: "question",
+    buttons: ["Restart Now", "Later"],
+    defaultId: 0,
+    message: "Update downloaded. Restart to apply now?",
+  });
+
+  if (response === 0) {
+    autoUpdater.quitAndInstall();
+  }
+});
+
 
 autoUpdater.on("update-downloaded", () => {
   const response = dialog.showMessageBoxSync({
@@ -209,4 +250,8 @@ ipcMain.handle('yt-getSuggestions', async (event, videoId) => {
     console.error(err);
     return { error: err.message };
   }
+});
+
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
 });

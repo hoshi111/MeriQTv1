@@ -19,11 +19,14 @@
 
         <div class="controls">
             <audio id="player"></audio>
-            <p id="title" class="title">MeriQT</p>
+            <p id="title" class="title">
+                <span id="titleSpan">MeriQT</span>
+            </p>
             <input type="range" id="trackbar" min="0" max="100" value="0">
              <img id="playpause" class="playpause" src="icons/play.png" alt="playpause">
              <img id="back" class="back" src="icons/back.png" alt="back">
              <img id="next" class="next" src="icons/next.png" alt="next">
+             <p class="version" id="version"></p>
         </div>
         <script src="./renderer.js"></script>
     </body>

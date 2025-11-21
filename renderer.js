@@ -9,16 +9,29 @@ const trackbar = document.getElementById('trackbar');
 const nextBtn = document.getElementById('next');
 const backBtn = document.getElementById('back');
 const titleEl = document.getElementById('title');
+const titleSpan = document.getElementById('titleSpan');
+const dup = document.getElementById("titleDuplicate");
 
 let isPlaying = false;
 let lastPlayedLi = null;
 let songList = [];
 let currentIndex = 0;
 
+
+
+async function showAppVersion() {
+  const version = await ipcRenderer.invoke('get-app-version');
+  document.getElementById('version').innerText = 'v' + version;
+}
+
+showAppVersion();
+
 // Play a song
 async function playSong(song, liElement = null, isFirstSelection = false) {
   // Update title
-  titleEl.textContent = song.name + (song.artist.name ? " - " + song.artist.name : "");
+  titleSpan.textContent = song.name + (song.artist.name ? " - " + song.artist.name : "");
+
+  checkOverflow();
 
   // Reset last played li color
   if (lastPlayedLi && lastPlayedLi !== liElement) {
@@ -160,4 +173,12 @@ function playPrevious() {
     currentIndex = (currentIndex - 1 + songList.length) % songList.length;
     const li = songList[currentIndex];
     playSong({ videoId: li.dataset.videoId, name: li.textContent, artist: '' }, li);
+}
+
+function checkOverflow() {
+  if (titleSpan.scrollWidth > titleEl.clientWidth) {
+    titleEl.classList.add("scroll");
+  } else {
+    titleEl.classList.remove("scroll");
+  }
 }
